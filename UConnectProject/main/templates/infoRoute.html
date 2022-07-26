@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% load static %} 
+{% block header%}
+    <title>myRoute</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+
+<style>
+    
+#map_map {
+    position: absolute;
+    top: 110px;
+    bottom: 66px;
+    right: 0px;
+    width: 73%;
+}
+
+.inline{
+    padding: 0;
+    margin-left: 20px;
+    display: inline-block;
+    border: 1px solid rgb(29, 29, 29);
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: rgb(192, 192, 192);
+}
+
+input[type=text]:focus {
+  border: 3px solid #555;
+  background-color: lightblue;
+}
+
+.cuadrito{
+    background-color: rgba(255, 136, 0, 0.527);
+    width: 350px;
+    height: 350px;
+    margin-top: 50px;
+    margin-left: 10px;
+    border-radius: 15px;
+    padding-top: 20px;
+}
+.te{
+    margin-left: 20px;
+    background-color: rgba(255, 255, 255, 0.801);
+    padding: 5px 5px 5px 5px;
+    border-radius: 5px;
+    width: 305px;
+}
+
+
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<div class="cuadrito">
+    <h4 class="te">Route's info</h4>
+    <div class="inline">StartDate = {{startdate}} </div><br><br>
+    <div class="inline">StartTime = {{startTime}} </div><br><br>
+    <div class="inline">Description = {{description}}</div><br><br>
+    <div class="inline">Petfriendly = {{petfriendly}} </div><br><br>
+
+    <a href="../" class="inline">
+        <input  type="button" value="Go back" style=" background-color:rgba(56, 56, 206, 0.692); border-radius:4px; color: rgb(255, 255, 255); padding: 5px 5px 5px 5px"/>
+    </a>
+    
+    <form action="" method="POST" class="inline">
+        {% csrf_token %}
+        <input  type="submit" value="Delete" style=" background-color:rgba(56, 56, 206, 0.692); border-radius:4px; color: rgb(255, 255, 255); padding: 5px 5px 5px 5px">
+    </form>
+</div>
+
+    {% if map %}
+    {{map.html.render|safe}}
+    
+    <script>
+        {{map.script.render|safe}}
+    </script>
+    {% endif %}
+
+{% endblock content %}

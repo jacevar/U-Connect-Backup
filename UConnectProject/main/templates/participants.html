@@ -1,0 +1,110 @@
+{% extends 'base.html' %} {% load static %} {% block header%}
+
+<style>
+  .a {
+    background-color: #ffae3563;
+  }
+  tr:hover {
+    background-color: rgba(31, 221, 180, 0.521);
+  }
+  tbody {
+    background-color: rgba(87, 84, 231, 0.336);
+  }
+
+  .tablita {
+    table-layout: fixed;
+  }
+
+  thead th:nth-child(3) {
+    width: 25%;
+  }
+  thead th:nth-child(4) {
+    width: 25%;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+  .table1 {
+    display: inline-block;
+    width: 300px;
+    padding: 5px 5px;
+    margin: 20px;
+    text-align: left;
+  }
+  .table2 {
+    display: inline-block;
+    width: 300px;
+    padding: 5px 5px;
+    margin: 20px;
+    text-align: left;
+  }
+</style>
+
+{% endblock header %} {% block content %}
+<div class="table1">
+  <h3>Waiting</h3>
+  <table class="tablita">
+    <thead>
+      <tr class="a">
+        <th>Name</th>
+        <th>LastName</th>
+        <th>Reputation</th>
+        <th></th>
+      </tr>
+    </thead>
+    {% for i in waiting %}
+    <tbody>
+      <tr>
+        <td>{{ i.1 }}</td>
+        <td>{{ i.2 }}</td>
+
+        <td>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <button name="accept" value="{{ i.0 }}">Accept</button>
+          </form>
+        </td>
+        <td>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <button name="deny" value="{{ i.0 }}">Deny</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="table2">
+  <h3>Accepted</h3>
+  <table class="tablita">
+    <thead>
+      <tr class="a">
+        <th>Name</th>
+        <th>LastName</th>
+        <th>Reputation</th>
+        <th></th>
+      </tr>
+    </thead>
+    {% for i in accepted %}
+    <tbody>
+      <tr>
+        <td>{{ i.1 }}</td>
+        <td>{{ i.2 }}</td>
+        <td>{{ i.3 }}</td>
+        <td>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <button name="delete" value="{{ i.0 }}">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block header%}
+  <title>Route</title>
+
+  <!-- Load Leaflet from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.5.0/dist/esri-leaflet.js"
+    integrity="sha512-ucw7Grpc+iEQZa711gcjgMBnmd9qju1CICsRaryvX7HJklK0pGl/prxKvtHwpgm5ZHdvAil7YPxI1oWPOWK3UQ=="
+    crossorigin=""></script>
+
+  <!-- Load Esri Leaflet Geocoder from CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.css"
+    integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+    crossorigin="">
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
+    integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
+    crossorigin=""></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <style>
+    body { margin:0; padding:0; }
+    #map { 
+      position: absolute;
+      top: 110px;
+      bottom: 66px;
+      width: 100%; 
+    }
+  </style>
+{% endblock header %}
+
+{% block content%}
+  
+      <div id="map" ></div>
+
+
+    <!-- Script to create map -->
+    
+    <script>
+        
+        var map = L.map('map').setView([6.1997094,-75.5814568], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var count=0;
+        var gcs = L.esri.Geocoding.geocodeService();
+        markers = [];
+        data=[];
+
+        function clearMarker(id) {
+            console.log(id)
+            var new_markers = []
+            markers.forEach(function(marker) {
+                if (marker._id == id) map.removeLayer(marker)
+                else new_markers.push(marker)
+            })
+            markers = new_markers
+        }
+        
+        map.on('click', (e)=>{
+            var popupContent = '<button onclick=clearMarker('+count+')>Clear Marker</button>';
+            count+=1;
+            gcs.reverse().latlng(e.latlng).run((err, res)=>{
+                if(err) return;
+                k=count.toString()
+                L.marker(res.latlng).addTo(map).bindPopup(res.address.Match_addr).openPopup();
+                data.push([res.latlng['lat'],res.latlng['lng']]);
+                if(count==2){
+                    const route_url='http://localhost:8000/setroute/'+data[0][0]+','+data[0][1]+','+data[1][0]+','+data[1][1];
+                    count=0;
+                    console.log(data);
+                    window.location.replace(route_url);
+                }
+            });
+            
+        });
+
+    </script>
+
+{% endblock content%}

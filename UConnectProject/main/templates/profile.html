@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+ {% load crispy_forms_tags %} 
+ {% block content %}
+ <style>
+     .a{
+         margin: 8% 50% 2% 2%;
+         background-color: rgba(37, 23, 156, 0.575);
+         border-radius: 10px;
+         padding: 50px 0px 50px 20px;
+         color: white;
+         display: flex;
+         justify-content: center;
+     }
+ </style>
+
+<div class="a">
+    <h2>Name: {{user.first_name}}</h2>
+    <h2>Username: {{user.username}}</h2>
+    <h2>Email: {{user.email}}</h2>
+</div>
+{% endblock %}
